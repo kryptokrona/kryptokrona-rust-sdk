@@ -2,7 +2,10 @@
 name = "kryptokrona-walletapi"
 version = "0.1.0"
 edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+authors = ["Marcus Cvjeticanin <mjovanc@icloud.com>", "n9lsjr"]
+description = "Kryptokrona Wallet API library in Rust."
+license = "BSD 3-Clause License"
+repository = "https://github.com/kryptokrona/kryptokrona-rust-sdk"
+rustc = "1.69.0"
 
 [dependencies]
