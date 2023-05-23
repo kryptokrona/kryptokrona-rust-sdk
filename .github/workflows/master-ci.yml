@@ -1,0 +1,40 @@
+name: build
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: "Build"
+    runs-on: ubuntu-22.04
+
+    strategy:
+      matrix:
+        library:
+          - kryptokrona-crypto
+          - kryptokrona-node
+          - kryptokrona-service
+          - kryptokrona-util
+          - kryptokrona-wallet
+          - kryptokrona-walletapi
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+
+      - name: Build and Test Library
+        run: |
+          for lib in ${{ matrix.library }}; do
+            cd $lib
+            cargo build --release
+            cargo test
+            cd ..
+          done

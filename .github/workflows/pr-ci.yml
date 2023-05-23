@@ -5,48 +5,34 @@ on:
 
 jobs:
   build:
-    name: "Build: ${{ matrix.config.name }} / ${{ matrix.config.architecture }}"
-    runs-on: ${{ matrix.config.os }}
+    name: "Build"
+    runs-on: ubuntu-22.04
 
     strategy:
       matrix:
-        config:
-          - {
-              name: "Ubuntu Latest",
-              os: ubuntu-22.04,
-              rust: stable,
-              architecture: x64,
-            }
-          - {
-              name: "macOS Latest",
-              os: macos-12.0,
-              rust: stable,
-              architecture: arm64,
-            }
-          - {
-              name: "macOS Latest",
-              os: macos-12.0,
-              rust: stable,
-              architecture: x64,
-            }
-          - {
-              name: "Windows Latest",
-              os: windows-latest,
-              rust: stable,
-              architecture: x64,
-            }
+        library:
+          - kryptokrona-crypto
+          - kryptokrona-node
+          - kryptokrona-service
+          - kryptokrona-util
+          - kryptokrona-wallet
+          - kryptokrona-walletapi
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout Repository
+        uses: actions/checkout@v3
 
       - name: Install Rust
         uses: actions-rs/toolchain@v1
         with:
           profile: minimal
-          toolchain: ${{ matrix.config.rust }}
+          toolchain: stable
 
-      - name: Build Project
-        run: cargo build --release
-
-      - name: Run Tests
-        run: cargo test
+      - name: Build and Test Library
+        run: |
+          for lib in ${{ matrix.library }}; do
+            cd $lib
+            cargo build --release
+            cargo test
+            cd ..
+          done
